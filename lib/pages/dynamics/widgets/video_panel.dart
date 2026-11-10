@@ -6,6 +6,8 @@ import 'package:PiliPlus/common/widgets/svg/play_icon.dart';
 import 'package:PiliPlus/models/common/badge_type.dart';
 import 'package:PiliPlus/models/dynamics/result.dart';
 import 'package:PiliPlus/utils/num_utils.dart';
+import 'package:PiliPlus/utils/page_utils.dart';
+import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:material_ui/material_ui.dart';
 
 Widget videoSeasonWidget(
@@ -15,6 +17,7 @@ Widget videoSeasonWidget(
   required DynamicItemModel item,
   required bool isSave,
   required bool isDetail,
+  bool isSameAuthor = false,
 }) {
   // type archive  ugcSeason
   // archive 视频/显示发布人
@@ -29,7 +32,9 @@ Widget videoSeasonWidget(
     _ => null,
   };
 
-  if (video == null) {
+  if (video == null ||
+      (DynamicsDataModel.blockChargingVideo &&
+          video.badge?.text?.contains('充电') == true)) {
     return const SizedBox.shrink();
   }
 
@@ -38,6 +43,46 @@ Widget videoSeasonWidget(
     padding = const EdgeInsets.symmetric(horizontal: 12);
   } else {
     padding = EdgeInsets.zero;
+  }
+
+  if (isSameAuthor && Pref.simplifyQuote && video.title != null) {
+    final title = video.title!;
+    return Padding(
+      padding: padding,
+      child: Material(
+        color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+        borderRadius: const BorderRadius.all(Radius.circular(6)),
+        child: InkWell(
+          onTap: () => PageUtils.pushDynDetail(item),
+          borderRadius: const BorderRadius.all(Radius.circular(6)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.play_circle_outline_rounded,
+                  size: 20,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: isDetail ? null : 2,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: theme.textTheme.bodyMedium?.fontSize,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    overflow: isDetail ? null : TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
   return Padding(
     padding: padding,

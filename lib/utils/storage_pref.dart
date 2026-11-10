@@ -537,6 +537,15 @@ abstract final class Pref {
   static bool get antiGoodsDyn =>
       _setting.get(SettingBoxKey.antiGoodsDyn, defaultValue: false);
 
+  static bool get blockChargingVideo =>
+      _setting.get(SettingBoxKey.blockChargingVideo, defaultValue: false);
+
+  static bool get blockLiveReserve =>
+      _setting.get(SettingBoxKey.blockLiveReserve, defaultValue: false);
+
+  static bool get simplifyQuote =>
+      _setting.get(SettingBoxKey.simplifyQuote, defaultValue: false);
+
   static bool get antiGoodsReply =>
       _setting.get(SettingBoxKey.antiGoodsReply, defaultValue: false);
 

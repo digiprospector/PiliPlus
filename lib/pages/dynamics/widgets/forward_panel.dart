@@ -13,9 +13,12 @@ Widget forwardPanel(
   required int floor,
   required ThemeData theme,
   required DynamicItemModel orig,
+  int? parentAuthorMid,
   required bool isSave,
   required bool isDetail,
 }) {
+  final isSameAuthor = parentAuthorMid != null &&
+      orig.modules.moduleAuthor?.mid == parentAuthorMid;
   final moduleDynamic = orig.modules.moduleDynamic;
   final major = moduleDynamic?.major;
   final isNoneMajor = major?.type == 'MAJOR_TYPE_NONE';
@@ -42,6 +45,7 @@ Widget forwardPanel(
           isDetail: isDetail,
           item: orig,
           floor: floor + 1,
+          isSameAuthor: isSameAuthor,
         ),
       ],
     );

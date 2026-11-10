@@ -46,6 +46,62 @@ class DynamicsDataModel {
   static bool enableFilter = banWordForDyn.pattern.isNotEmpty;
 
   static bool antiGoodsDyn = Pref.antiGoodsDyn;
+  static bool blockChargingVideo = Pref.blockChargingVideo;
+  static bool blockLiveReserve = Pref.blockLiveReserve;
+
+  static bool _isLiveReserveDynamic(DynamicItemModel item) {
+    bool checkAdditional(DynamicAddModel? add) =>
+        add?.type == 'ADDITIONAL_TYPE_RESERVE' || add?.reserve != null;
+
+    if (checkAdditional(item.modules.moduleDynamic?.additional)) return true;
+    if (item.orig case final orig?) {
+      if (checkAdditional(orig.modules.moduleDynamic?.additional)) return true;
+    }
+    return false;
+  }
+
+  static bool _isChargingDynamic(DynamicItemModel item) {
+    bool checkArchive(DynamicArchiveModel? a) =>
+        a?.badge?.text != null && a!.badge!.text!.contains('充电');
+
+    bool checkAuthor(ModuleAuthorModel? author) {
+      if (author == null) return false;
+      return (author.pubAction?.contains('充电') == true) ||
+          (author.badgeText?.contains('充电') == true);
+    }
+
+    bool checkMajor(DynamicMajorModel? major) {
+      if (major == null) return false;
+      if (checkArchive(major.archive)) return true;
+      if (checkArchive(major.ugcSeason)) return true;
+      if (checkArchive(major.pgc)) return true;
+      if (checkArchive(major.courses)) return true;
+      if (major.upowerCommon != null) return true;
+      if (major.blocked case final blocked?) {
+        if (blocked.hintMessage?.contains('充电') == true ||
+            blocked.title?.contains('专属') == true ||
+            blocked.button?.text?.contains('充电') == true) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    bool checkItem(DynamicItemModel target) {
+      if (checkAuthor(target.modules.moduleAuthor)) return true;
+      if (checkMajor(target.modules.moduleDynamic?.major)) return true;
+      if (target.modules.moduleDynamic?.additional?.upowerLottery != null) {
+        return true;
+      }
+      return false;
+    }
+
+    if (checkItem(item)) return true;
+    if (item.orig case final orig?) {
+      if (checkItem(orig)) return true;
+    }
+    return false;
+  }
 
   DynamicsDataModel.fromJson(
     Map<String, dynamic> json, {
@@ -61,6 +117,12 @@ class DynamicsDataModel {
           type != DynamicsTabType.up && tempBannedList?.isNotEmpty == true;
       for (final e in list) {
         DynamicItemModel item = DynamicItemModel.fromJson(e);
+        if (blockChargingVideo && _isChargingDynamic(item)) {
+          continue;
+        }
+        if (blockLiveReserve && _isLiveReserveDynamic(item)) {
+          continue;
+        }
         if (antiGoodsDyn &&
             (item.orig?.modules.moduleDynamic?.additional?.type ==
                     'ADDITIONAL_TYPE_GOODS' ||

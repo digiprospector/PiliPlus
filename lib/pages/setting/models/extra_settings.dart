@@ -10,6 +10,7 @@ import 'package:PiliPlus/common/widgets/image_grid/image_grid_view.dart'
     show ImageGridView, ImageModel;
 import 'package:PiliPlus/http/fav.dart';
 import 'package:PiliPlus/http/loading_state.dart';
+import 'package:PiliPlus/models/dynamics/result.dart' show DynamicsDataModel;
 import 'package:PiliPlus/models/common/sponsor_block/skip_type.dart';
 import 'package:PiliPlus/pages/common/slide/common_slide_page.dart';
 import 'package:PiliPlus/pages/home/controller.dart';
@@ -93,6 +94,29 @@ List<SettingsModel> get extraSettings => [
     title: '使用外部浏览器打开链接',
     leading: Icon(Icons.open_in_browser),
     setKey: SettingBoxKey.openInBrowser,
+    defaultVal: false,
+  ),
+  SwitchModel(
+    title: '屏蔽充电专属',
+    subtitle: '带有“充电专属”标志的视频与动态将不予显示',
+    leading: const Icon(Icons.bolt),
+    setKey: SettingBoxKey.blockChargingVideo,
+    defaultVal: false,
+    onChanged: (value) => DynamicsDataModel.blockChargingVideo = value,
+  ),
+  SwitchModel(
+    title: '屏蔽直播预约',
+    subtitle: '带有直播预约卡片的动态将不予显示',
+    leading: const Icon(Icons.event_busy),
+    setKey: SettingBoxKey.blockLiveReserve,
+    defaultVal: false,
+    onChanged: (value) => DynamicsDataModel.blockLiveReserve = value,
+  ),
+  const SwitchModel(
+    title: '精简引用',
+    subtitle: '引用同一UP主的视频时仅显示标题，点击仍可播放',
+    leading: Icon(Icons.short_text_rounded),
+    setKey: SettingBoxKey.simplifyQuote,
     defaultVal: false,
   ),
   NormalModel(

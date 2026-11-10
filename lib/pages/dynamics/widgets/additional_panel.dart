@@ -73,6 +73,9 @@ Widget? addWidget(
         );
 
       case 'ADDITIONAL_TYPE_RESERVE' when (additional.reserve != null):
+        if (DynamicsDataModel.blockLiveReserve) {
+          return const SizedBox.shrink();
+        }
         final reserve = additional.reserve!;
         if (reserve.state != -1 && reserve.title != null) {
           child = InkWell(

@@ -109,29 +109,31 @@ if ($platform.ToLower() -eq "ios") {
     git apply $BottomSheetIOSPiliPlusPatch
     if ($LASTEXITCODE -eq 0) {
         Write-Host "$BottomSheetIOSPiliPlusPatch applied"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
     git apply $GeetestIOSPatch
     if ($LASTEXITCODE -eq 0) {
         Write-Host "$GeetestIOSPatch applied"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
 }
 
 Set-Location $env:FLUTTER_ROOT
 
-$picks   = @()
+$picks = @()
 $reverts = @()
 $patches = @($ModalBarrierPatch, $TextSelectionPatch, $MouseCursorPatch,
-            $ImageAnimPatch, $LayoutBuilderPatch, $NavigationDrawerPatch,
-            $PopupMenuPatch, $FABPatch, $NullSafetySelectableRegionPatch,
-            $SelectableRegionPatch, $EditableTextPatch, $TextFieldPatch,
-            $ScrollPositionPatch, $ScrollablePatch, $ScrollableGesturePatch,
-            $DraggableScrollableSheetPatch, $ScaffoldPatch, $TextPatch,
-            $TextPainterPatch, $SliverPatch, $RefreshIndicatorPatch,
-            $DoubleTapGesturePatch)
+    $ImageAnimPatch, $LayoutBuilderPatch, $NavigationDrawerPatch,
+    $PopupMenuPatch, $FABPatch, $NullSafetySelectableRegionPatch,
+    $SelectableRegionPatch, $EditableTextPatch, $TextFieldPatch,
+    $ScrollPositionPatch, $ScrollablePatch, $ScrollableGesturePatch,
+    $DraggableScrollableSheetPatch, $ScaffoldPatch, $TextPatch,
+    $TextPainterPatch, $SliverPatch, $RefreshIndicatorPatch,
+    $DoubleTapGesturePatch)
 
 switch ($platform.ToLower()) {
     "android" {
@@ -162,7 +164,8 @@ foreach ($pick in $picks) {
     if ($LASTEXITCODE -eq 0) {
         git reset --soft HEAD~1
         Write-Host "$pick picked"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
     git stash pop
@@ -174,7 +177,8 @@ foreach ($revert in $reverts) {
     if ($LASTEXITCODE -eq 0) {
         git reset --soft HEAD~1
         Write-Host "$revert reverted"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
     git stash pop
@@ -184,7 +188,8 @@ foreach ($patch in $patches) {
     git apply "$env:GITHUB_WORKSPACE/$patch"
     if ($LASTEXITCODE -eq 0) {
         Write-Host "$patch applied"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
 }
@@ -212,8 +217,8 @@ $RefreshIndicatorPatchMaterial = "lib/scripts/material/refresh_indicator.patch"
 $TabsPatchMaterial = "lib/scripts/material/tabs.patch"
 
 $patches_material = @($ModalBarrierPatchMaterial, $NavigationDrawerPatchMaterial, $PopupMenuPatchMaterial,
-                    $FABPatchMaterial, $TextFieldPatchMaterial, $ScaffoldPatchMaterial, $RefreshIndicatorPatchMaterial,
-                    $TabsPatchMaterial)
+    $FABPatchMaterial, $TextFieldPatchMaterial, $ScaffoldPatchMaterial, $RefreshIndicatorPatchMaterial,
+    $TabsPatchMaterial)
 
 $PubCacheDir = "~/.pub-cache"
 
@@ -236,20 +241,21 @@ switch ($platform.ToLower()) {
 
 try {
     $MaterialUiDir = Get-ChildItem "$PubCacheDir/hosted/pub.dev" -Directory |
-        Where-Object { $_.Name -like "material_ui-*" } |
-        Select-Object -Last 1
+    Where-Object { $_.Name -like "material_ui-*" } |
+    Select-Object -Last 1
 
     if ($MaterialUiDir) {
         Remove-Item -Path $MaterialUiDir.FullName -Recurse -Force
     }
-} catch {
+}
+catch {
 }
 
 flutter pub get
 
 $MaterialUiDir = Get-ChildItem "$PubCacheDir/hosted/pub.dev" -Directory |
-    Where-Object { $_.Name -like "material_ui-*" } |
-    Select-Object -Last 1
+Where-Object { $_.Name -like "material_ui-*" } |
+Select-Object -Last 1
 
 if (-not $MaterialUiDir) {
     throw "material_ui package not found in pub cache"
@@ -259,7 +265,7 @@ Write-Host "material_ui dir: $($MaterialUiDir.FullName)"
 
 Get-ChildItem -Path "$env:GITHUB_WORKSPACE/lib/scripts/material" -Filter *.patch | ForEach-Object {
     (Get-Content $_.FullName -Raw) -replace "`r`n", "`n" | 
-        Set-Content -NoNewline $_.FullName
+    Set-Content -NoNewline $_.FullName
 }
 
 cd $MaterialUiDir.FullName
@@ -268,7 +274,8 @@ foreach ($patch in $patches_material) {
     git apply "$env:GITHUB_WORKSPACE/$patch"
     if ($LASTEXITCODE -eq 0) {
         Write-Host "$patch applied"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
 }
@@ -293,8 +300,8 @@ switch ($platform.ToLower()) {
 }
 
 $CupertinoUiDir = Get-ChildItem "$PubCacheDir/hosted/pub.dev" -Directory |
-    Where-Object { $_.Name -like "cupertino_ui-*" } |
-    Select-Object -Last 1
+Where-Object { $_.Name -like "cupertino_ui-*" } |
+Select-Object -Last 1
 
 if (-not $CupertinoUiDir) {
     throw "cupertino_ui package not found in pub cache"
@@ -304,7 +311,7 @@ Write-Host "cupertino_ui dir: $($CupertinoUiDir.FullName)"
 
 Get-ChildItem -Path "$env:GITHUB_WORKSPACE/lib/scripts/cupertino" -Filter *.patch | ForEach-Object {
     (Get-Content $_.FullName -Raw) -replace "`r`n", "`n" | 
-        Set-Content -NoNewline $_.FullName
+    Set-Content -NoNewline $_.FullName
 }
 
 cd $CupertinoUiDir.FullName
@@ -313,7 +320,8 @@ foreach ($patch in $patches_cupertino) {
     git apply "$env:GITHUB_WORKSPACE/$patch"
     if ($LASTEXITCODE -eq 0) {
         Write-Host "$patch applied"
-    } else {
+    }
+    else {
         throw "$LASTEXITCODE"
     }
 }

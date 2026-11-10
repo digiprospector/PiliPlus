@@ -39,6 +39,7 @@ Widget module(
   required DynamicItemModel item,
   required bool isSave,
   required bool isDetail,
+  bool isSameAuthor = false,
 }) {
   final moduleDynamic = item.modules.moduleDynamic;
   final major = moduleDynamic?.major;
@@ -75,6 +76,7 @@ Widget module(
         floor: floor,
         isSave: isSave,
         isDetail: isDetail,
+        isSameAuthor: isSameAuthor,
       );
     // 转发
     case 'DYNAMIC_TYPE_FORWARD':
@@ -83,6 +85,7 @@ Widget module(
         theme: theme,
         isSave: isSave,
         orig: item.orig!,
+        parentAuthorMid: item.modules.moduleAuthor?.mid,
         isDetail: isDetail,
         floor: floor + 1,
       );

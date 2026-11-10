@@ -56,6 +56,13 @@ List<SettingsModel> get dynSettings => [
     onChanged: (value) => DynamicsDataModel.antiGoodsDyn = value,
   ),
   const SwitchModel(
+    title: '精简引用',
+    subtitle: '引用同一UP主的视频时仅显示标题，点击仍可播放',
+    leading: Icon(Icons.short_text_rounded),
+    setKey: SettingBoxKey.simplifyQuote,
+    defaultVal: false,
+  ),
+  const SwitchModel(
     title: '动态/专栏详情页展示底部操作栏',
     leading: Icon(Icons.more_horiz),
     setKey: SettingBoxKey.showDynActionBar,

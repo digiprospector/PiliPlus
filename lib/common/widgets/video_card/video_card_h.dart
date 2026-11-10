@@ -12,6 +12,7 @@ import 'package:PiliPlus/utils/date_utils.dart';
 import 'package:PiliPlus/utils/duration_utils.dart';
 import 'package:PiliPlus/utils/page_utils.dart';
 import 'package:PiliPlus/utils/platform_utils.dart';
+import 'package:PiliPlus/utils/storage_pref.dart';
 import 'package:material_ui/material_ui.dart';
 
 // 视频卡片 - 水平布局
@@ -36,6 +37,9 @@ class VideoCardH extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (Pref.blockChargingVideo && videoItem.badge == '充电专属') {
+      return const SizedBox.shrink();
+    }
     final theme = Theme.of(context);
     return Material(
       type: .transparency,

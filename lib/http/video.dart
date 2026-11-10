@@ -107,6 +107,12 @@ abstract final class VideoHttp {
 
   static bool _filterWebRcmd(dynamic i) {
     if (i['goto'] != 'av') return true;
+    if (Pref.blockChargingVideo &&
+        (i['charging_pay'] != null ||
+            i['badge'] == '充电专属' ||
+            i['rcmd_reason']?['content'] == '充电专属')) {
+      return true;
+    }
     if (i['owner'] != null &&
         GlobalData().blackMids.contains(i['owner']['mid'])) {
       return true;
@@ -119,6 +125,14 @@ abstract final class VideoHttp {
         i['card_goto'] == 'ad_web_s' ||
         i['ad_info'] != null ||
         i['can_play'] != 1) {
+      return true;
+    }
+    if (Pref.blockChargingVideo &&
+        (i['charging_pay'] != null ||
+            i['top_rcmd_reason'] == '充电专属' ||
+            i['bottom_rcmd_reason'] == '充电专属' ||
+            i['rcmd_reason'] == '充电专属' ||
+            i['badge'] == '充电专属')) {
       return true;
     }
     if (i['args'] != null &&
@@ -202,6 +216,9 @@ abstract final class VideoHttp {
   }
 
   static bool _filterHotAndRank(dynamic i) {
+    if (Pref.blockChargingVideo && i['charging_pay']?['level'] != null) {
+      return false;
+    }
     if (GlobalData().blackMids.contains(i['owner']['mid'])) return false;
     if (RecommendFilter.filterTitle(i['title'])) return false;
     if (RecommendFilter.filterLikeRatio(i['stat']['like'], i['stat']['view'])) {
