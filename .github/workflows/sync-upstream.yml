@@ -7,6 +7,7 @@ name: Sync Upstream
 
 permissions:
   contents: write
+  workflows: write
 
 concurrency:
   group: sync-upstream
@@ -45,4 +46,5 @@ jobs:
       - name: Mirror upstream tags
         run: |
           git fetch upstream --tags
-          git push origin --tags
+          # 尝试批量同步 Tag，即使个别历史旧 Tag 因包含老旧工作流被安全策略限制，也不阻断同步
+          git push origin --tags || echo "部分历史 Tag 受 GitHub 安全策略限制，已跳过"
